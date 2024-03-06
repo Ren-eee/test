@@ -1,0 +1,304 @@
+credentials:
+  system:
+    domainCredentials:
+    - credentials:
+      - usernamePassword:
+          id: "a0561312-2ce2-4fb2-bf20-c844ebdb7003"
+          password: "{AQAAABAAAAAQz6wlFu9Oz/W9oJqapYyuE+sBqKhwSL3q1bs2fW6ROb8=}"
+          scope: GLOBAL
+          username: "autoreleaser"
+jenkins:
+  agentProtocols:
+  - "JNLP4-connect"
+  - "Ping"
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+  clouds:
+  - docker:
+	dockerApi:
+        connectTimeout: 60
+        dockerHost:
+          uri: "tcp://172.18.0.3:2375"
+        readTimeout: 60
+      name: "docker"
+      templates:
+      - connector:
+          attach:
+            user: "autoreleaser"
+        dockerTemplateBase:
+          cpuPeriod: 0
+          cpuQuota: 0
+          image: "nexus.nic.etu:8181/nic/astra_se16:jenkins"
+        instanceCapStr: "1"
+        labelString: "docker_astra_16"
+        pullStrategy: PULL_ALWAYS
+        pullTimeout: 300
+        remoteFs: "/home/autoreleaser"
+      - connector:
+          attach:
+            user: "autoreleaser"
+        dockerTemplateBase:
+          cpuPeriod: 0
+          cpuQuota: 0
+          image: "nexus.nic.etu:8181/nic/windows_7_mingw64-7.3.0:jenkins"
+        instanceCapStr: "1"
+        labelString: "windows_7_mingw64-7.3.0"
+        pullStrategy: PULL_ALWAYS
+        pullTimeout: 300
+        remoteFs: "/home/autoreleaser"
+  - docker:
+      dockerApi:
+        connectTimeout: 60
+        dockerHost:
+          uri: "tcp://astra:12345678@192.168.0.113:2376"
+        readTimeout: 60
+      name: "tmp_docker"
+      templates:
+      - connector:
+          attach:
+            user: "autoreleaser"
+        disabled:
+          disabledByChoice: true
+          enabledByChoice: false
+        dockerTemplateBase:
+          cpuPeriod: 0
+          cpuQuota: 0
+          environment:
+          - "USER=autoreleaser LD_LIBRARY_PATH=/usr/lib64 TMPDIR=/home/autoreleaser/.tmp/0-0"
+          environmentsString: "USER=autoreleaser LD_LIBRARY_PATH=/usr/lib64 TMPDIR=/home/autoreleaser/.tmp/0-0"
+          image: "nexus.nic.etu:8181/nic/astra_se16:jenkins"
+          mounts:
+          - "type=bind,source=/m2/astra_16/,destination=/home/autoreleaser/.m2"
+          mountsString: "type=bind,source=/m2/astra_16/,destination=/home/autoreleaser/.m2"
+        instanceCapStr: "1"
+        labelString: "docker_astra_16"
+        pullStrategy: PULL_ALWAYS
+        pullTimeout: 300
+        remoteFs: "/home/autoreleaser"
+      - connector:
+          attach:
+            user: "autoreleaser"
+        dockerTemplateBase:
+          cpuPeriod: 0
+          cpuQuota: 0
+          environment:
+          - "USER=autoreleaser LD_LIBRARY_PATH=/usr/lib64 TMPDIR=/home/autoreleaser/.tmp/0-0"
+          environmentsString: "USER=autoreleaser LD_LIBRARY_PATH=/usr/lib64 TMPDIR=/home/autoreleaser/.tmp/0-0"
+          extraHosts:
+          - "as.panda.nicetu.spb.ru:192.168.21.31"
+          extraHostsString: "as.panda.nicetu.spb.ru:192.168.21.31"
+          image: "nexus.nic.etu:8181/nic/fedora_29:jenkins"
+          mounts:
+          - "type=bind,source=/m2/fedora_29/,destination=/home/autoreleaser/.m2"
+          mountsString: "type=bind,source=/m2/fedora_29/,destination=/home/autoreleaser/.m2"
+        instanceCapStr: "1"
+        labelString: "docker_fedora_29"
+        pullStrategy: PULL_ALWAYS
+        pullTimeout: 300
+        remoteFs: "/home/autoreleaser"
+      - connector: "attach"
+        dockerTemplateBase:
+          bindPorts: "USER=autoreleaser LD_LIBRARY_PATH=/usr/lib RUNLEVEL=3"
+          capabilitiesToAdd:
+          - "SYS_PTRACE"
+          capabilitiesToAddString: "SYS_PTRACE"
+          cpuPeriod: 0
+          cpuQuota: 0
+          extraHosts:
+          - "as.panda.nicetu.spb.ru:192.168.21.31"
+          extraHostsString: "as.panda.nicetu.spb.ru:192.168.21.31"
+          image: "nexus.nic.etu:8181/nic/astra_se17:jenkins"
+          mounts:
+          - "type=bind,source=/parsecfs,destination=/parsecfs type=bind,source=/m2/astra_se17/,destination=/home/autoreleaser/.m2\
+            \ type=bind,source=/ccache/astra_se17/,destination=/home/autoreleaser/.ccache"
+          mountsString: "type=bind,source=/parsecfs,destination=/parsecfs type=bind,source=/m2/astra_se17/,destination=/home/autoreleaser/.m2\
+            \ type=bind,source=/ccache/astra_se17/,destination=/home/autoreleaser/.ccache"
+          shmSize: 2048
+          user: "autoreleaser"
+        instanceCapStr: "1"
+        labelString: "docker_astra_17"
+        pullStrategy: PULL_ALWAYS
+        pullTimeout: 601
+        remoteFs: "/home/autoreleaser"
+  crumbIssuer:
+    standard:
+      excludeClientIPFromCrumb: false
+  disableRememberMe: false
+  disabledAdministrativeMonitors:
+  - "hudson.util.DoubleLaunchChecker"
+  labelAtoms:
+  - name: "built-in"
+  - name: "docker_astra_17"
+  - name: "docker_fedora_29"
+  markupFormatter: "plainText"
+  mode: NORMAL
+  myViewsTabBar: "standard"
+  nodeMonitors:
+  - diskSpaceMonitor:
+      freeSpaceThreshold: "1GB"
+  - tmpSpace:
+      freeSpaceThreshold: "1GB"
+  numExecutors: 2
+  primaryView:
+    all:
+      name: "all"
+  projectNamingStrategy: "standard"
+  quietPeriod: 5
+  remotingSecurity:
+    enabled: true
+  scmCheckoutRetryCount: 0
+  securityRealm:
+    local:
+      allowsSignup: false
+      enableCaptcha: false
+      users:
+      - id: "admin"
+        name: "admin"
+        properties:
+        - "apiToken"
+        - "mailer"
+        - "myView"
+        - preferredProvider:
+            providerId: "default"
+        - "timezone"
+        - "experimentalFlags"
+        - "favorite"
+      - id: "autoreleaser"
+        name: "autoreleaser"
+        properties:
+        - "apiToken"
+        - "favorite"
+        - "myView"
+        - preferredProvider:
+            providerId: "default"
+        - "timezone"
+        - "experimentalFlags"
+        - mailer:
+            emailAddress: "milostanov@mail.ru"
+  slaveAgentPort: 50000
+  updateCenter:
+    sites:
+    - id: "default"
+      url: "https://updates.jenkins.io/update-center.json"
+  views:
+  - all:
+      name: "all"
+  viewsTabBar: "standard"
+globalCredentialsConfiguration:
+  configuration:
+    providerFilter: "none"
+    typeFilter: "none"
+appearance:
+  prism:
+    theme: PRISM
+security:
+  apiToken:
+    creationOfLegacyTokenEnabled: false
+    tokenGenerationOnCreationEnabled: false
+    usageStatisticsEnabled: true
+  gitHooks:
+    allowedOnAgents: false
+    allowedOnController: false
+  gitHostKeyVerificationConfiguration:
+    sshHostKeyVerificationStrategy: "knownHostsFileVerificationStrategy"
+  sSHD:
+    port: -1
+unclassified:
+  bitbucketEndpointConfiguration:
+    endpoints:
+    - bitbucketCloudEndpoint:
+        enableCache: false
+        manageHooks: false
+        repositoriesCacheDuration: 0
+        teamCacheDuration: 0
+  buildDiscarders:
+    configuredBuildDiscarders:
+    - "jobBuildDiscarder"
+  buildStepOperation:
+    enabled: false
+  email-ext:
+    adminRequiredForTemplateTesting: false
+    allowUnregisteredEnabled: false
+    charset: "UTF-8"
+    debugMode: false
+    defaultBody: |-
+      $PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
+
+      Check console output at $BUILD_URL to view the results.
+    defaultContentType: "text/plain"
+    defaultSubject: "$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!"
+    defaultTriggerIds:
+    - "hudson.plugins.emailext.plugins.trigger.FailureTrigger"
+    maxAttachmentSize: -1
+    maxAttachmentSizeMb: -1
+    precedenceBulk: false
+    watchingEnabled: false
+  enrichedSummaryConfig:
+    enrichedSummaryEnabled: false
+    httpClientDelayBetweenRetriesInSeconds: 1
+    httpClientMaxRetries: 3
+    httpClientTimeoutInSeconds: 1
+  fingerprints:
+    fingerprintCleanupDisabled: false
+    storage: "file"
+  gitHubConfiguration:
+    apiRateLimitChecker: ThrottleForNormalize
+  gitHubPluginConfig:
+    hookUrl: "http://192.168.64.20:8080/github-webhook/"
+  globalLibraries:
+    libraries:
+    - defaultVersion: "devel"
+      implicit: true
+      name: "development"
+      retriever:
+        modernSCM:
+          scm:
+            git:
+              credentialsId: "a0561312-2ce2-4fb2-bf20-c844ebdb7003"
+              id: "8f7336b7-5398-4edb-9b3d-e199c20a9413"
+              remote: "http://git.nic.etu/infrastructure/jenkins/development-library.git"
+              traits:
+              - "gitBranchDiscovery"
+  globalTimeOutConfiguration:
+    operations:
+    - "abortOperation"
+    overwriteable: false
+  injectionConfig:
+    allowUntrusted: false
+    checkForBuildAgentErrors: false
+    enabled: false
+    enforceUrl: false
+    injectCcudExtension: false
+    injectMavenExtension: false
+  junitTestResultStorage:
+    storage: "file"
+  location:
+    adminAddress: "адрес еще не настроен <nobody@nowhere>"
+    url: "http://192.168.64.20:8080/"
+  mailer:
+    charset: "UTF-8"
+    useSsl: false
+    useTls: false
+  pollSCM:
+    pollingThreadCount: 10
+  scmGit:
+    addGitTagAction: false
+    allowSecondFetch: false
+    createAccountBasedOnEmail: false
+    disableGitToolChooser: false
+    hideCredentials: false
+    showEntireCommitSummaryInChanges: false
+    useExistingAccountWithSameEmail: false
+  timestamper:
+    allPipelines: false
+    elapsedTimeFormat: "'<b>'HH:mm:ss.S'</b> '"
+    systemTimeFormat: "'<b>'HH:mm:ss'</b> '"
+tool:
+  git:
+    installations:
+    - home: "git"
+      name: "Default"
+  mavenGlobalConfig:
+    globalSettingsProvider: "standard"
+    settingsProvider: "standard"
